@@ -175,6 +175,38 @@ Objašnjenje parametara:
 Metoda se izvršava na svim klijentima, ali je spawn dozvoljen samo serveru (StateAuthority).
 Svakom igraču se dodeljuje NetworkObject.
 PlayerRef predstavlja mrežni identitet igrača i koristi se kao ključ za praćenje igrača.
+```csharp
+public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+{
+    if (!runner.IsServer) return;
+
+    Vector3 spawnPosition = new Vector3(
+        (player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3,
+        0,
+        0
+    );
+
+    NetworkObject networkPlayerObject =
+        runner.Spawn(playerPrefab, spawnPosition, Quaternion.identity, player);
+
+    networkPlayerObject.name = "P:" + player.PlayerId;
+    _spawnedPlayers.Add(player, networkPlayerObject);
+}
+```
+
+### OnPlayerLeft
+
+Metoda se poziva kada igrač napusti sesiju ili izgubi konekciju.
+Server uklanja NetworkObject igrača na svim klijentima i stanje sveta je konzistentno.
+```csharp
+public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
+{
+    if (!_spawnedPlayers.TryGetValue(player, out var networkPlayerObject)) return;
+
+    runner.Despawn(networkPlayerObject);
+    _spawnedPlayers.Remove(player);
+}
+```
 
 
 ### NetworkObject i mrežni identitet objekata
