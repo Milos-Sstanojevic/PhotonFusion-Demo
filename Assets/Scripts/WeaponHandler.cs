@@ -10,10 +10,34 @@ public class WeaponHandler : NetworkBehaviour
     [SerializeField] private LayerMask playerLayers;
     [SerializeField] private Transform aimPoint;
     [SerializeField] private HPHandler hpHandler;
-    [HideInInspector][Networked,OnChangedRender(nameof(OnFireChanged))] public bool IsFiring { get; set; }
-
-    private float _lastTimeFired = 0;
+    private float _lastTimeFired;
+    [HideInInspector][Networked] public NetworkBool IsFiring { get; set; }
+    private ChangeDetector _changeDetector;
     
+
+    public override void Spawned()
+    {
+        _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
+    }
+    
+    public override void Render()
+    {
+        if(_changeDetector.DetectChanges(this).Changed("IsFiring"))
+            OnFireChanged();
+    }
+    
+    private void OnFireChanged()
+    {
+        if (IsFiring)
+            OnFireRemote();
+    }
+
+    private void OnFireRemote()
+    {
+        if(!Object.HasInputAuthority)
+            firePfx.Play();
+    }
+
     public override void FixedUpdateNetwork()
     {
         if(hpHandler.IsDead) return;
@@ -29,7 +53,8 @@ public class WeaponHandler : NetworkBehaviour
             return;
 
         StartCoroutine(FireEffectCo());
-        Runner.LagCompensation.Raycast(aimPoint.position, aimPoint.forward, 100,Object.InputAuthority, out var hitInfo, playerLayers, HitOptions.IncludePhysX);
+        Runner.LagCompensation.Raycast(aimPoint.position, aimPoint.forward, 
+            100,Object.InputAuthority, out var hitInfo, playerLayers, HitOptions.IncludePhysX);
 
         if (hitInfo.Hitbox != null && Object.HasStateAuthority)
         {
@@ -42,21 +67,9 @@ public class WeaponHandler : NetworkBehaviour
 
     private IEnumerator FireEffectCo()
     {
-        IsFiring = true;        // networked property can only be changed by state authority, even if client changes it, server will override it
+        IsFiring = true;
         firePfx.Play();
         yield return new WaitForSeconds(0.09f);
         IsFiring = false;      
-    }
-
-    private void OnFireChanged()
-    {
-        if (IsFiring)
-            OnFireRemote();
-    }
-
-    private void OnFireRemote()
-    {
-        if(!Object.HasInputAuthority)
-            firePfx.Play();
     }
 }

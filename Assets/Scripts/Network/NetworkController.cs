@@ -7,9 +7,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
-public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
+public class NetworkController : MonoBehaviour, INetworkRunnerCallbacks
 {
-    [FormerlySerializedAs("_playerPrefab")] [SerializeField] private NetworkPrefabRef playerPrefab;
+    [SerializeField] private NetworkPrefabRef playerPrefab;
     private readonly Dictionary<PlayerRef, NetworkObject> _spawnedPlayers = new Dictionary<PlayerRef, NetworkObject>();
     private NetworkRunner _runner;
 
@@ -39,15 +39,17 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if(GUI.Button(new Rect(0,40,200,40),"Join"))
             StartGame(GameMode.Client);
     }
-
-    public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player)
+    
+    public void OnInput(NetworkRunner runner, NetworkInput input)
     {
+        NetworkInputData data = new NetworkInputData();
+        data.movementInput=new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical"));
+        data.rotationInput=new Vector2(Input.GetAxisRaw("Mouse X"),Input.GetAxisRaw("Mouse Y")*-1);
+        data.isJumpPressed=Input.GetButton("Jump");
+        data.isFirePressed=Input.GetButton("Fire1");
+        input.Set(data);
     }
-
-    public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player)
-    {
-    }
-
+    
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         if (!runner.IsServer) return;
@@ -64,11 +66,27 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         _spawnedPlayers.Remove(player);
     }
 
-    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+    public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
     {
     }
 
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
+    {
+    }
+    
+    public void OnConnectedToServer(NetworkRunner runner)
+    {
+    }
+    
+    public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player)
+    {
+    }
+
+    public void OnObjectEnterAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player)
+    {
+    }
+
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
     }
 
@@ -92,21 +110,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
     }
 
-    public void OnInput(NetworkRunner runner, NetworkInput input)
-    {
-        NetworkInputData data = new NetworkInputData();
-        data.movementInput=new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical"));
-        data.rotationInput=new Vector2(Input.GetAxisRaw("Mouse X"),Input.GetAxisRaw("Mouse Y")*-1);
-        data.isJumpPressed=Input.GetButton("Jump");
-        data.isFirePressed=Input.GetButton("Fire1");
-        input.Set(data);
-    }
-
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
-    {
-    }
-
-    public void OnConnectedToServer(NetworkRunner runner)
     {
     }
 
@@ -118,10 +122,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
     }
 
-    public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
-    {
-    }
-
+  
     public void OnSceneLoadDone(NetworkRunner runner)
     {
     }

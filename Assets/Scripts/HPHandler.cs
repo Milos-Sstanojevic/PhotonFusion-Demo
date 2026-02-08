@@ -10,19 +10,30 @@ public class HPHandler : NetworkBehaviour
       [SerializeField] private MeshRenderer meshRenderer;
       [SerializeField] private Image gotHitImage;
       [SerializeField] private GameObject playerModel;
+      private bool _isInitialized;
+      private Color _defaultColor;
+      private HitboxRoot _hitboxRoot;
       [HideInInspector][Networked,OnChangedRender(nameof(OnHPChange))] public int HP { get; set; }
       [HideInInspector][Networked,OnChangedRender(nameof(OnStateChanged))] public bool IsDead { get; set; }
+      
+      public void OnStateChanged()
+      {
+            if (IsDead)
+                  RpcOnDeath();
+      }
 
-      private bool isInitialized = false;
-      private Color _defaultColor;
-      private HitboxRoot hitboxRoot;
+      [Rpc(RpcSources.InputAuthority,RpcTargets.All)]
+      public void RpcOnDeath()
+      {
+            Destroy(gameObject);
+      }
       
       private void Start()
       {
             HP = startHP;
             IsDead=false;
 
-            isInitialized = true;
+            _isInitialized = true;
             _defaultColor=meshRenderer.material.color;
       }
 
@@ -47,20 +58,8 @@ public class HPHandler : NetworkBehaviour
 
       public void OnHPChange()
       {
-            if (!isInitialized) return;
+            if (!_isInitialized) return;
             StartCoroutine(ShowHit());
-      }
-      
-      public void OnStateChanged()
-      {
-            if (IsDead)
-                  RpcOnDeath();
-      }
-
-      [Rpc(RpcSources.InputAuthority,RpcTargets.All)]
-      public void RpcOnDeath()
-      {
-            Destroy(gameObject);
       }
       
 }

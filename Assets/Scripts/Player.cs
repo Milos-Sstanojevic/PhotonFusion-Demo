@@ -16,11 +16,6 @@ public class Player : NetworkBehaviour
     private bool _jumpWasPressed;
     private bool _fireWasPressed;
 
-    private void Awake()
-    {
-        _playerLocalCameraTr=playerLocalCamera.transform;
-    }
-    
     public override void Spawned()
     {
         Cursor.lockState=CursorLockMode.Locked;
@@ -42,7 +37,7 @@ public class Player : NetworkBehaviour
         if (!GetInput(out NetworkInputData data)) return;
         Vector3 moveDirection = _tr.forward * data.movementInput.y + _tr.right * data.movementInput.x;
         moveDirection.Normalize();
-        _characterController.Move(moveDirection);       //this can be outside of state authority because internaly it will have check for state authority
+        _characterController.Move(moveDirection);
         
         if(Object.HasInputAuthority)
             _playerLocalCameraTr.localRotation=Quaternion.Euler(Pitch,0,0);
@@ -53,13 +48,17 @@ public class Player : NetworkBehaviour
         
         _yaw += data.rotationInput.x * _characterController.rotationSpeed * Runner.DeltaTime;
         _tr.rotation = Quaternion.Euler(0, _yaw, 0);
-
-       
         
         bool jumpPressed = data.isJumpPressed && !_jumpWasPressed;
         _jumpWasPressed = data.isJumpPressed;
         if (jumpPressed)
             _characterController.Jump();
-        
     }
+    
+    private void Awake()
+    {
+        _playerLocalCameraTr=playerLocalCamera.transform;
+    }
+    
+    
 }
