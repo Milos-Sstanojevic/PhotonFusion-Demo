@@ -417,12 +417,12 @@ public void RpcOnDeath()
 2. Otovriti projekat u Unity-ju preko Unity Hub-a
 3. Uneti Photon App ID
 
-<img width="1160" height="1092" alt="image" src="https://github.com/user-attachments/assets/30fe5a4d-db1f-419f-9213-2f1435d0149e" />
+<img width="723" height="282" alt="image" src="https://github.com/user-attachments/assets/f25651d3-9f1a-4bf3-af81-2eed2243d5f4" />
 <img width="800" height="564" alt="image" src="https://github.com/user-attachments/assets/7cf4ee83-ef90-478e-8390-cca442fe99b6" />
 
 4. Otvoriti Network Project Settings i omogućiti LagCompensation
 
-<img width="1165" height="1093" alt="image" src="https://github.com/user-attachments/assets/198026f5-2189-41be-b811-8aa55b93147a" />
+<img width="457" height="296" alt="image" src="https://github.com/user-attachments/assets/e00862af-a6f2-4e39-a27e-d3b56aa1ed93" />
 <img width="559" height="1015" alt="image" src="https://github.com/user-attachments/assets/9aedbea2-f879-451e-acf6-d385deb139e5" />
 
 5. Pokrenuti dva build-a projekta, ili jedan build i play mode unutar Unity editora
