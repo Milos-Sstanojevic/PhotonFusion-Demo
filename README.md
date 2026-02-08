@@ -96,7 +96,7 @@ Cilj projekata nije kompletna igra, već jasna demonstracija osnovnih koncepara 
 
 ## Arhitektura rešenja
 
-- **BasicSpawner** - upravlja sesijom i mrežnim tick-ovima
+- **NetworkController** - upravlja sesijom i mrežnim tick-ovima
 - **Player (NetworkBehaviour)** - logika igračevih kontrola kretanja
 - **NetworkCharacterControllerFPS** - kopija Photon Fusion clase NetworkCharacterController sa manjim korekcijama radi prilagođavanja FPS načinu kretanaj igrača
 - **Weapon (MonoBehaviour)** - upravlja rotacijom oružja (nišanom)
@@ -135,7 +135,7 @@ Klasa koja implementira ovaj interfejs dobija callback metode za:
 - spawn i despawn mrežnih objekata,
 - promene stanja mreže
 
-U ovom projektu klasa `BasicSpawner` implementira `INetworkRunnerCallbacks` i služi kao **glavni mrežni kontroler sesije**.
+U ovom projektu klasa `NetworkController` implementira `INetworkRunnerCallbacks` i služi kao **glavni mrežni kontroler sesije**.
 
 ### NetworkRunner
 
@@ -273,7 +273,7 @@ public struct NetworkInputData : INetworkInput
 
 Obrada inputa u Photon Fusion-u se sastoji iz dva jasno odvojena koraka:
 1. **Prikupljanje inputa (OnInput)** - lokalno, na klijentu
-   - Input se ne čita direktno u Player skripti. Umesto toga, Fusion zahteva da se sav input prikuplja u `OnInput()` callback-u, koji se najčešće nalazi u klasi koja upravlja sesijom (u ovo slučaju `BasicSpawner`).
+   - Input se ne čita direktno u Player skripti. Umesto toga, Fusion zahteva da se sav input prikuplja u `OnInput()` callback-u, koji se najčešće nalazi u klasi koja upravlja sesijom (u ovo slučaju `NetworkController`).
 ```csharp
 public void OnInput(NetworkRunner runner, NetworkInput input)
 {
