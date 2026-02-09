@@ -5455,8 +5455,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7428071257181768491}
   - component: {fileID: 4900008265920671761}
-  - component: {fileID: 8491537114959964320}
   - component: {fileID: 6474072127949991832}
+  - component: {fileID: 8491537114959964320}
   - component: {fileID: 7735896247499523653}
   - component: {fileID: 3527461050478627012}
   - component: {fileID: 6395179792009233789}
@@ -5509,6 +5509,23 @@ MonoBehaviour:
   - {fileID: 6395179792009233789}
   - {fileID: 2972575825825997733}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &6474072127949991832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4610037120800867759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1ca57761c044abbb5a5ed6f888dde89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  jumpForce: 10
+  playerLocalCamera: {fileID: 5500111650345556117}
+  weapon: {fileID: 6012560689967654420}
+  _Pitch: 0
 --- !u!143 &8491537114959964320
 CharacterController:
   m_ObjectHideFlags: 0
@@ -5535,23 +5552,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6474072127949991832
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4610037120800867759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1ca57761c044abbb5a5ed6f888dde89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 5
-  jumpForce: 10
-  playerLocalCamera: {fileID: 5500111650345556117}
-  weapon: {fileID: 6012560689967654420}
-  _Pitch: 0
 --- !u!114 &7735896247499523653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5807,7 +5807,8 @@ MonoBehaviour:
     m_Bits: 65
   aimPoint: {fileID: 7223674399167497652}
   hpHandler: {fileID: 6395179792009233789}
-  _IsFiring: 0
+  _IsFiring:
+    _value: 0
 --- !u!1 &8283357680377895139
 GameObject:
   m_ObjectHideFlags: 0
